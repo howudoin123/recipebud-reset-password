@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password - RecipeBud</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            background-color: #FF6B6B; /* Coral Red */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            box-sizing: border-box; /* Important for padding */
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            background-color: white;
+            color: #FF6B6B;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        #message {
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 20px; /* Reserve space for the message */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://res.cloudinary.com/diffvj1ze/image/upload/v1748557875/android-chrome-192x192_o8dpjh.png" alt="RecipeBud Logo" class="logo">
+        <h1 id="title">Set a new password</h1>
+        <form id="reset-form">
+            <input type="password" id="password" placeholder="Enter new password" required>
+            <input type="password" id="password-confirm" placeholder="Confirm new password" required>
+            <button type="submit">Update Password</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        // --- IMPORTANT: REPLACE WITH YOUR SUPABASE CREDENTIALS ---
+        const SUPABASE_URL = 'https://ikpubgyglutjvzlqwcpn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcHViZ3lnbHV0anZ6bHF3Y3BuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2MzU4ODksImV4cCI6MjA2NzIxMTg4OX0.OStFQSkq1K4D0nLa7nMoPvy4BM2n5Gb_aIOQoylsSz4';
+        // ---------------------------------------------------------
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const resetForm = document.getElementById('reset-form');
+        const messageEl = document.getElementById('message');
+        const titleEl = document.getElementById('title');
+
+        resetForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('password-confirm').value;
+
+            // NEW: Check if passwords match
+            if (password !== passwordConfirm) {
+                messageEl.textContent = 'Passwords do not match. Please try again.';
+                messageEl.style.color = '#ffff00'; // Yellow for error
+                return; // Stop the function here
+            }
+
+            // NEW: Check for password length (optional but recommended)
+            if (password.length < 6) {
+                messageEl.textContent = 'Password must be at least 6 characters long.';
+                messageEl.style.color = '#ffff00';
+                return;
+            }
+
+            messageEl.textContent = 'Updating...';
+            messageEl.style.color = 'white';
+
+            // Supabase function to update the user's password
+            const { error } = await supabase.auth.updateUser({ password: password });
+
+            if (error) {
+                messageEl.textContent = 'Error: ' + error.message;
+                messageEl.style.color = '#ffff00'; // Yellow for error
+            } else {
+                messageEl.textContent = 'Success! Your password has been updated. You can now log in with your new password in the app.';
+                messageEl.style.color = 'white';
+                // Hide the form after success
+                resetForm.style.display = 'none';
+                titleEl.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
