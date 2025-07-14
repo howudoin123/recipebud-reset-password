@@ -62,7 +62,9 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcHViZ3lnbHV0anZ6bHF3Y3BuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2MzU4ODksImV4cCI6MjA2NzIxMTg4OX0.OStFQSkq1K4D0nLa7nMoPvy4BM2n5Gb_aIOQoylsSz4';
         // ---------------------------------------------------------
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // ** FIXED ** Initialize the client with a unique variable name.
+        // The global `supabase` object comes from the CDN script.
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const resetContent = document.getElementById('reset-content');
         const errorMessage = document.getElementById('error-message');
@@ -120,7 +122,8 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Updating...';
 
-            const { error } = await supabase.auth.updateUser({ password: password });
+            // ** FIXED ** Use the newly named client variable.
+            const { error } = await supabaseClient.auth.updateUser({ password: password });
 
             if (error) {
                 showToast('Error: ' + error.message);
