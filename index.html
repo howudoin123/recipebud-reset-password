@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password - RecipeBud</title>
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/diffvj1ze/image/upload/v1748723286/favicon-32x32_gujmud.png">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <style>
@@ -59,11 +60,9 @@
     <script>
         // --- IMPORTANT: REPLACE WITH YOUR SUPABASE CREDENTIALS ---
         const SUPABASE_URL = 'https://ikpubgyglutjvzlqwcpn.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcHViZ3lnbHV0anZ6bHF3Y3BuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2MzU4ODksImV4cCI6MjA2NzIxMTg4OX0.OStFQSkq1K4D0nLa7nMoPvy4BM2n5Gb_aIOQoylsSz4';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlrcHViZ3lnbHV0anZ6bHF3Y3BuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTYzNTg4OSwiZXhwIjoyMDY3MjExODg5fQ.IpIydaeh1h6LPcWHmNh8sru8f3G80aeK3dqcrD6NDAg';
         // ---------------------------------------------------------
 
-        // ** FIXED ** Initialize the client with a unique variable name.
-        // The global `supabase` object comes from the CDN script.
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const resetContent = document.getElementById('reset-content');
@@ -122,7 +121,6 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Updating...';
 
-            // ** FIXED ** Use the newly named client variable.
             const { error } = await supabaseClient.auth.updateUser({ password: password });
 
             if (error) {
